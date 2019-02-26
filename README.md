@@ -31,7 +31,7 @@ Cliquez sur le lien ci-dessous pour faire votre fork privé du TP (**attention, 
 
 https://classroom.github.com/a/DWp3d1wf
 
-Date limite de rendu de votre code sur le dépôt GitHub : **Vendredi 8 mars à 23h00**
+Date limite de rendu de votre code sur le dépôt GitHub : **Vendredi 15 mars à 23h00**
 
 L’objectif de ce TP est d’écrire un algorithme qui résout par exploration totale n’importe quel "puzzle". Nous allons
 illustrer cet algorithme sur un puzzle très simple : un [taquin](https://fr.wikipedia.org/wiki/Taquin) en une dimension.
