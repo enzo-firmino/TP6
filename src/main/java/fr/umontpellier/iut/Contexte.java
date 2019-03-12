@@ -8,7 +8,7 @@ public class Contexte {
     private ArrayList<Taquin>solution;
 
     public void resoudre() {
-        throw new RuntimeException("Méthode non-implémentée");
+        
     }
 
 }
