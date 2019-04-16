@@ -2,132 +2,140 @@ package fr.umontpellier.iut;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class Taquin {
 
-    private int [][] plateau;
-
+    private int[][] plateau;
 
     public Taquin() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("le nombre de colonnes du taquin :");
-        int nbColonne = sc.nextInt();
-        sc = new Scanner(System.in);
-        System.out.println("le nombre de lignes du taquin :");
-        int nbLigne = sc.nextInt();
-        this.plateau = new int [nbLigne][nbColonne];
-     }
+        plateau = new int[3][3];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                plateau[i][j] = 3*i + j;
+            }
+        }
+    }
 
-    public Taquin(int[][] plateau) {
+    public Taquin(int [][]plateau) {
         this.plateau = plateau;
     }
 
-    public boolean estGagnant() {
-        int x = 1;
-        for( int i = 0; i<this.plateau.length; i++){
-            for( int j = 0; j<this.plateau[0].length; i++){
-                if(this.plateau[i][j] != x) {
-                    return false;
-                }
-                x++;
+
+    public int[][] copie(int[][]tab) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                tab[i][j] = this.plateau[i][j];
             }
         }
-        return true;
+        return tab;
+    }
+
+    public String toString() {
+        String renvoie = "";
+        for (int p = 0; p < 3; p++) {
+            for (int q = 0; q < 3; q++) {
+                renvoie = renvoie + plateau[p][q] + " ";
+            }
+            renvoie = renvoie + "\n";
+        }
+        return renvoie;
+    }
+
+    public boolean estGagnant() {
+        boolean renvoie = true;
+        int i = 1;
+        int a = 0;
+        int b = 0;
+        while (i < 8) {
+            if (plateau[a][b] != i) {
+                return false;
+            }
+            i++;
+            b++;
+            if (b > 2) {
+                b = 0;
+                a++;
+            }
+        }
+        if (plateau[2][2] != 0) {
+            return false;
+        }
+        return renvoie;
     }
 
     public ArrayList<Taquin> genererFils() {
-        ArrayList<Taquin> listeFils = new ArrayList<Taquin>();
-        int colonneTrou = 0;
-        int ligneTrou = 0;
+        ArrayList<Taquin> listeFils = new ArrayList<>();
+        int x = 0; // colonne du trou
+        int y = 0; // ligne du trou
         for (int i = 0; i < this.plateau.length; i++) {
             for (int j = 0; j < this.plateau[0].length; j++) {
                 if (this.plateau[i][j] == 0) {
-                    colonneTrou = j;
-                    ligneTrou = i;
+                    x = j;
+                    y = i;
                 }
             }
         }
 
-
-        if (colonneTrou < this.plateau[0].length - 1) { //on bouge vers la droite
+        if (x < this.plateau[0].length - 1) {
             int[][] newPlateau = new int [this.plateau.length][this.plateau[0].length];
-            newPlateau = copiePlateau(newPlateau);
-            newPlateau[ligneTrou][colonneTrou] = newPlateau[ligneTrou][colonneTrou + 1];
-            newPlateau[ligneTrou][colonneTrou + 1] = 0;
-            Taquin newTaquin = new Taquin(newPlateau);
-            listeFils.add(newTaquin);
+            newPlateau = copie(newPlateau);
+            newPlateau[y][x] = newPlateau[y][x + 1];
+            newPlateau[y][x + 1] = 0;
+            Taquin T1 = new Taquin(newPlateau);
+            listeFils.add(T1);
+        } // mouvement vers la droite du trou
 
+        if (x > 0) {
+            int[][] newPlateau = new int [this.plateau.length][this.plateau[0].length];
+            newPlateau = copie(newPlateau);
+            newPlateau[y][x] = newPlateau[y][x - 1];
+            newPlateau[y][x - 1] = 0;
+            Taquin T1 = new Taquin(newPlateau);
+            listeFils.add(T1);
+        } // mouvement vers la gauche du trou
+
+        if (y > 0) {
+            int[][] newPlateau = new int [this.plateau.length][this.plateau[0].length];
+            newPlateau = copie(newPlateau);
+            newPlateau[y][x] = newPlateau[y - 1][x];
+            newPlateau[y - 1][x] = 0;
+            Taquin T1 = new Taquin(newPlateau);
+            listeFils.add(T1);
         }
 
-            if (colonneTrou > 0) { //on bouge vers la gauche
-                int[][] newPlateau = new int [this.plateau.length][this.plateau[0].length];
-                newPlateau = copiePlateau(newPlateau);
-                newPlateau[ligneTrou][colonneTrou] = newPlateau[ligneTrou][colonneTrou - 1];
-                newPlateau[ligneTrou][colonneTrou - 1] = 0;
-                Taquin newTaquin = new Taquin(newPlateau);
-                listeFils.add(newTaquin);
-            }
-
-            if (ligneTrou > 0) { //on bouge vers le haut
-                int[][] newPlateau = new int [this.plateau.length][this.plateau[0].length];
-                newPlateau = copiePlateau(newPlateau);
-                newPlateau[ligneTrou][colonneTrou] = newPlateau[ligneTrou - 1][colonneTrou];
-                newPlateau[ligneTrou - 1][colonneTrou] = 0;
-                Taquin newTaquin = new Taquin(newPlateau);
-                listeFils.add(newTaquin);
-            }
+        if (y < this.plateau.length - 1) {
+            int[][] newPlateau = new int [this.plateau.length][this.plateau[0].length];
+            newPlateau = copie(newPlateau);
+            newPlateau[y][x] = newPlateau[y + 1][x];
+            newPlateau[y + 1][x] = 0;
+            Taquin T1 = new Taquin(newPlateau);
+            listeFils.add(T1);
+        } // mouvement vers le bas du trou
 
 
-            if (ligneTrou < this.plateau.length - 1) { //on bouge vers le bas
-                int[][] newPlateau = new int [this.plateau.length][this.plateau[0].length];
-                newPlateau = copiePlateau(newPlateau);
-                newPlateau[ligneTrou][colonneTrou] = newPlateau[ligneTrou + 1][colonneTrou];
-                newPlateau[ligneTrou + 1][colonneTrou] = 0;
-                Taquin newTaquin = new Taquin(newPlateau);
-                listeFils.add(newTaquin);
-            }
-            return listeFils;
-        }
-
-
-        public int [][] copiePlateau(int [][] newPlateau) {
-            for (int i = 0; i < this.plateau.length; i++) {
-                for (int j = 0; j < this.plateau[0].length; j++) {
-                    newPlateau[i][j] = this.plateau[i][j];
-                }
-            }
-            return newPlateau;
-        }
-
-
-
+        return listeFils;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Taquin taquin = (Taquin) o;
-        return this.plateau == taquin.plateau ;
-
+        Taquin T = (Taquin) o;
+        //return Arrays.equals(plateau, taquin.plateau);
+        boolean renvoie = false;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (this.plateau[i][j] != T.plateau[i][j]) {
+                    return false;
+                }
+            }
         }
+        return true;
+    }
 
     @Override
     public int hashCode() {
         return Arrays.hashCode(plateau);
     }
-
-    @Override
-    public String toString() {
-        String plateau= "";
-        for( int i = 0; i<this.plateau.length; i++){
-            for( int j = 0; j<this.plateau[0].length; j++){
-                plateau = plateau + this.plateau[i][j];
-            }
-            plateau = plateau + "\n";
-        }
-        return plateau;
-    }
-
 
 }
